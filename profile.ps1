@@ -8,6 +8,46 @@ Set-Alias vi $vimPath
 Set-Alias vim $vimPath
 Set-Alias git $gitPath
 
+$host.UI.RawUI.BackgroundColor = "black"
+Clear-Host
+
+function Set-Prompt
+{
+    PARAM
+    (
+        [Parameter()][ValidateSet("reset","simple")]$prompt
+    )
+    switch($prompt)
+    {
+        "simple"
+        {
+            function global:Prompt
+            {
+                "PS> "
+            }
+        }
+        "reset"
+        {
+            function global:Prompt
+            {
+                $(if (test-path variable:/PSDebugContext) { '[DBG]: ' } else { '' }) + 'PS ' + $(Get-Location) + $(if ($nestedpromptlevel -ge 1) { '>>' }) + '> '
+            }
+        }
+        default
+        {
+            function global:Prompt
+            {   
+                Write-Host -NoNewLine "PS"
+                Write-Host -NoNewLine "[$(((Get-History -Count 1).Id + 1).ToString('0000'))]" -ForegroundColor "green"
+                Write-Host -NoNewLine "[$env:USERNAME@$env:USERDNSDOMAIN]" -ForegroundColor "red"
+                Write-Host -NoNewLine "[$(Get-Location)]" -ForegroundColor "yellow"
+                '> '
+            }
+        }
+    }
+}
+Set-Prompt
+
 # Open VIM to profile
 function Edit-Profile
 {
@@ -34,3 +74,7 @@ function Invoke-GitPush
     }
 }
 
+function Test-Profile
+{
+    
+}
