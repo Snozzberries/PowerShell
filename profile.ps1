@@ -30,6 +30,7 @@ function Invoke-GitPush
     {
         git add $target
         git commit -m $comment
-        git push - u origin master
+        git push -u origin master
     }
 }
+
