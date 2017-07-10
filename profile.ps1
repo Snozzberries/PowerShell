@@ -63,7 +63,7 @@ function Edit-Vimrc
 function Invoke-GitPush
 {
     PARAM (
-        [Parameter()] $target = ".\",
+        [Parameter()][string] $target = ".\",
         [Parameter(Mandatory=$true)] $comment
     )
     PROCESS
