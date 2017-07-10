@@ -1,5 +1,5 @@
 $gitHub = "https://github.com/Snozzberries/PowerShell/blob/master/profile.ps1"
-$profileVersion = "0.1"
+$profileVersion = "0.2"
 
 $vimPath = "${env:ProgramFiles(x86)}\Vim\vim80\vim.exe"
 $gitPath = "$env:ProgramFiles\Git\bin\git.exe"
@@ -36,7 +36,7 @@ function Set-Prompt
         default
         {
             function global:Prompt
-            {   
+            {
                 Write-Host -NoNewLine "PS"
                 Write-Host -NoNewLine "[$(((Get-History -Count 1).Id + 1).ToString('0000'))]" -ForegroundColor "green"
                 Write-Host -NoNewLine "[$env:USERNAME@$env:USERDNSDOMAIN]" -ForegroundColor "red"
@@ -46,6 +46,10 @@ function Set-Prompt
         }
     }
 }
+Write-Host "`r"
+Write-Host "$env:COMPUTERNAME.$((Get-WmiObject Win32_ComputerSystem).Domain)"
+Get-NetIPAddress|?{$_.addressState -eq "Preferred" -and $_.suffixOrigin -ne "WellKnown"}|%{$if=$_;"$((Get-NetAdapter -InterfaceIndex $_.ifIndex).Name) - $($_.ipAddress) /$($_.prefixLength) => $(if($_.addressFamily -eq "IPv4"){(Get-NetRoute|?{$_.ifIndex -eq $if.ifIndex -and $_.addressFamily -ne "IPv6" -and $_.NextHop -ne "0.0.0.0"}).NextHop}else{(Get-NetRoute|?{$_.ifIndex -eq $if.ifIndex -and $_.addressFamily -ne "IPv4" -and $_.NextHop -ne "::"}).NextHop})`n`tDNS Servers $((Get-DnsClientServerAddress|?{$_.interfaceIndex -eq $if.ifIndex -and $_.addressFamily -eq $if.addressFamily}).ServerAddresses|%{"- $_"})"}
+Write-Host "`r"
 Set-Prompt
 
 # Open VIM to profile
@@ -63,7 +67,7 @@ function Edit-Vimrc
 function Invoke-GitPush
 {
     PARAM (
-        [Parameter()][string] $target = ".\",
+        [Parameter()][string]$target = ".\",
         [Parameter(Mandatory=$true)] $comment
     )
     PROCESS
