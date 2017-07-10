@@ -11,7 +11,7 @@ Set-Alias git $gitPath
 # Open VIM to profile
 function Edit-Profile
 {
-    vim $profile
+    vim "$env:UserProfile\Documents\WindowsPowerShell\profile.ps1"
 }
 
 # Open VIM to VIM Settings
@@ -24,7 +24,7 @@ function Invoke-GitPush
 {
     PARAM (
         [Parameter()] $target = ".",
-        [Parameter()] $comment = $null
+        [Parameter(Mandatory=$true)] $comment
     )
     PROCESS
     {
