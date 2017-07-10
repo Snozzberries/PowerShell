@@ -48,7 +48,7 @@ function Set-Prompt
 }
 Write-Host "`r"
 Write-Host "$env:COMPUTERNAME.$((Get-WmiObject Win32_ComputerSystem).Domain)"
-Get-NetIPAddress|?{$_.addressState -eq "Preferred" -and $_.suffixOrigin -ne "WellKnown"}|%{$if=$_;"$((Get-NetAdapter -InterfaceIndex $_.ifIndex).Name) - $($_.ipAddress) /$($_.prefixLength) => $(if($_.addressFamily -eq "IPv4"){(Get-NetRoute|?{$_.ifIndex -eq $if.ifIndex -and $_.addressFamily -ne "IPv6" -and $_.NextHop -ne "0.0.0.0"}).NextHop}else{(Get-NetRoute|?{$_.ifIndex -eq $if.ifIndex -and $_.addressFamily -ne "IPv4" -and $_.NextHop -ne "::"}).NextHop})`n`tDNS Servers $((Get-DnsClientServerAddress|?{$_.interfaceIndex -eq $if.ifIndex -and $_.addressFamily -eq $if.addressFamily}).ServerAddresses|%{"- $_"})`n`t$(Get-NetConnectionProfile|?{$_.interfaceIndex -eq $if.interfaceIndex}|%{if($_.NetworkCategory -eq "DomainAuthenticated"){$profile="Domain"}else{$profile=$_.NetworkCategory}"Firewall: $profile - $(if((Get-NetFirewallProfile $profile).Enabled){'Enabled'}else{'Disabled'})"})"}
+Get-NetIPAddress|?{$_.addressState -eq "Preferred" -and $_.suffixOrigin -ne "WellKnown"}|%{$if=$_;"$((Get-NetAdapter -InterfaceIndex $_.ifIndex).Name) - $($_.ipAddress) /$($_.prefixLength) => $(if($_.addressFamily -eq "IPv4"){(Get-NetRoute|?{$_.ifIndex -eq $if.ifIndex -and $_.addressFamily -ne "IPv6" -and $_.NextHop -ne "0.0.0.0"}).NextHop}else{(Get-NetRoute|?{$_.ifIndex -eq $if.ifIndex -and $_.addressFamily -ne "IPv4" -and $_.NextHop -ne "::"}).NextHop})`n`tDNS Servers $((Get-DnsClientServerAddress|?{$_.interfaceIndex -eq $if.ifIndex -and $_.addressFamily -eq $if.addressFamily}).ServerAddresses|%{"- $_"})"}
 Write-Host "`r"
 Set-Prompt
 
