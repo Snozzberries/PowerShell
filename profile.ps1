@@ -1,5 +1,6 @@
 $gitHub = "https://github.com/Snozzberries/PowerShell/blob/master/profile.ps1"
-$profileVersion = "0.2"
+$gitHubRaw = "https://raw.githubusercontent.com/Snozzberries/PowerShell/master/profile.ps1"
+$profileVersion = "0.3"
 
 $vimPath = "${env:ProgramFiles(x86)}\Vim\vim80\vim.exe"
 $gitPath = "$env:ProgramFiles\Git\bin\git.exe"
@@ -39,7 +40,7 @@ function Set-Prompt
             {
                 Write-Host -NoNewLine "PS"
                 Write-Host -NoNewLine "[$(((Get-History -Count 1).Id + 1).ToString('0000'))]" -ForegroundColor "green"
-                Write-Host -NoNewLine "[$env:USERNAME@$env:USERDNSDOMAIN]" -ForegroundColor "red"
+                #Write-Host -NoNewLine "[$env:USERNAME@$env:USERDNSDOMAIN]" -ForegroundColor "red"
                 Write-Host -NoNewLine "[$(Get-Location)]" -ForegroundColor "yellow"
                 '> '
             }
@@ -80,5 +81,22 @@ function Invoke-GitPush
 
 function Test-Profile
 {
+    $newProfile = (Invoke-WebRequest $gitHub).content
+    $existingProfile = Get-Content "$env:UserProfile\Documents\WindowsPowerShell\profile.ps1"
     
+    if ($newProfile -ne $exsistingProfile)
+    {
+        $title = "Profile Out of Sync"
+        $message = "The current profile is not synced to GitHub, would you like to use the GitHub profile?"
+        $yes = New-Object System.Management.Automation.Host.ChoiceDescription "&Yes","Update PowerShell Profile from GitHub"
+        $no = New-Object System.Management.Automation.Host.ChoiceDescription "&No","Retain exsisting PowerShell Profile"
+        $options = [System.Management.Automation.Host.ChoiceDescription[]]($no,$yes)
+        $response = $host.ui.PromptForChoice($title,$message,$options,0)
+        if ($response)
+        {
+            $newProfile | Out-File "$env:UserProfile\Documents\WindowsPowerShell\profile.ps1"
+        }
+    }
 }
+
+Test-Profile
