@@ -82,7 +82,7 @@ function Invoke-GitPush
 function Test-Profile
 {
     $newProfile = (Invoke-WebRequest $gitHubRaw).content
-    $existingProfile = Get-Content "$env:UserProfile\Documents\WindowsPowerShell\profile.ps1"
+    $existingProfile = Get-Content -Raw "$env:UserProfile\Documents\WindowsPowerShell\profile.ps1"
     
     if ($newProfile -ne $exsistingProfile)
     {
