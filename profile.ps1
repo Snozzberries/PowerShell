@@ -94,7 +94,8 @@ function Test-Profile
         $response = $host.ui.PromptForChoice($title,$message,$options,0)
         if ($response)
         {
-            $newProfile | Out-File "$env:UserProfile\Documents\WindowsPowerShell\profile.ps1"
+            #$newProfile | Out-File "$env:UserProfile\Documents\WindowsPowerShell\profile.ps1"
+            [io.file]::WriteAllText("$env:UserProfile\Documents\WindowsPowerShell\profile.ps1",$newProfile)
         }
     }
 }
