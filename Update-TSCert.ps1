@@ -1,0 +1,1 @@
+(gwmi Win32_TSGeneralSetting -Namespace root\cimv2\terminalservices -Filter "TerminalName='RDP-tcp'").__Path | swmi -Arguments @{SSLCertificateSHA1Hash="$((gci Cert:\LocalMachine\my | ?{$_.Extensions | ?{$_.oid.friendlyname -match  "Template" -and $_.format(0) -match "Insert Template Name Here"}} | Select -First 1).Thumbprint)"}
