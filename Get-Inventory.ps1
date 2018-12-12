@@ -8,6 +8,7 @@ gwmi Win32_OperatingSystem|select Caption,BuildNumber,InstallDate,Locale,MUILang
 gwmi Win32_ComputerSystem|Select Name,DNSHostName,BootupState,PartOfDomain,Domain,DomainRole,NumberOfProcessors,NumberOfLogicalProcessors,TotalPhysicalMemory|Export-Csv $env:HOMEPATH\Desktop\$env:COMPUTERNAME-ComputerSystem.csv
 
 gwmi Win32_Product|select Vendor,Name,Version,Caption|Export-Csv -Path $env:HOMEPATH\Desktop\$env:COMPUTERNAME-Software.csv
+# Does not work in Windows, only Windows Server, use DISM on Windows OS
 Get-WindowsFeature|?{$_.InstallState -eq "Installed"}|Select DisplayName,Name|Export-Csv $env:HOMEPATH\Desktop\$env:COMPUTERNAME-Features.csv
 (New-Object -ComObject Microsoft.Update.Session).CreateUpdateSearcher().Search("IsInstalled=0 and Type='Software' and IsHidden=0").Updates|Select LastDeploymentChangeTime,Title,Description,IsBeta,IsDownloaded,SupportUrl|Export-Csv $env:HOMEPATH\Desktop\$env:COMPUTERNAME-AvailableUpdates.csv
 (New-Object -ComObject Microsoft.Update.Session).CreateUpdateSearcher().QueryHistory(0,(New-Object -ComObject Microsoft.Update.Session).CreateUpdateSearcher().GetTotalHistoryCount())|Select Date,Title,Description,HResult,ResultCode,SupportURL|Export-Csv $env:HOMEPATH\Desktop\$env:COMPUTERNAME-UpdateHistory.csv
