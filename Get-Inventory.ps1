@@ -1,9 +1,12 @@
 # ADRecon.ps1
 # https://raw.githubusercontent.com/sense-of-security/ADRecon/master/ADRecon.ps1
+# AAD Connect MA Documenter
+# https://github.com/Microsoft/AADConnectConfigDocumenter
 
 # Azure Only
 Invoke-RestMethod -Headers @{"Metadata"="true"} -URI http://169.254.169.254/metadata/instance?api-version=2017-08-01 -Method get -OutFile $env:HOMEPATH\Desktop\$env:COMPUTERNAME-Metadata.json
 
+<# Windows #>
 gwmi Win32_OperatingSystem|select Caption,BuildNumber,InstallDate,Locale,MUILanguages,OSArchitecture,OSLanguage,SystemDrive,Version|Export-Csv $env:HOMEPATH\Desktop\$env:COMPUTERNAME-OperatingSystem.csv
 gwmi Win32_ComputerSystem|Select Name,DNSHostName,BootupState,PartOfDomain,Domain,DomainRole,NumberOfProcessors,NumberOfLogicalProcessors,TotalPhysicalMemory|Export-Csv $env:HOMEPATH\Desktop\$env:COMPUTERNAME-ComputerSystem.csv
 
@@ -86,3 +89,78 @@ else
     }
     Start-Process powershell -Verb runAs -ArgumentList "-Command",$script -wait
 }
+
+<# O365 #>
+Import-Module Az
+Import-Module MSOnline
+Connect-AzAccount
+Connect-MsolService
+Get-MsolDomain
+Get-MsolDomain|?{$_.authentication -eq "Federated"}
+Get-MsolDomain|?{$_.authentication -eq "Federated"}|select name
+Get-MsolDomain|?{$_.authentication -eq "Federated"}|%{$_.name;Get-MsolDomainFederationSettings -DomainName $_.name|fl *}
+Get-MsolAccountSku|ft skupartnumber,activeunits
+(Get-AzureADTenantDetail).verifieddomains|select name,capabilities|Group-Object capabilities|%{$_.group|sort capabilities}
+Get-AzureADDirectoryRole|%{"";$_.displayname;Get-AzureADDirectoryRoleMember -ObjectId  $_.objectid|ft}
+Get-MsolRole|%{"";$_.name;Get-MsolRoleMember -RoleObjectId $_.objectid|ft}
+$o=Get-AzureADDirectoryRole|%{Get-AzureADDirectoryRoleMember -ObjectId $_.objectid|select objectid,displayname}
+$o+=get-msolrole|%{Get-MsolRoleMember -RoleObjectId $_.objectid|select objectid,displayname}
+$o=$o|select objectid,displayname -unique
+$o|%{Get-MsolUser -ObjectId $_.objectid | select DisplayName,UserPrincipalName,@{N="MFA Status"; E={ if( $_.StrongAuthenticationRequirements.State -ne $null){ $_.StrongAuthenticationRequirements.State} else { "Disabled"}}}}
+$x=$o|%{Get-MsolUser -ObjectId $_.objectid | select DisplayName,UserPrincipalName,@{N="MFA Status"; E={ if( $_.StrongAuthenticationRequirements.State -ne $null){$_.StrongAuthenticationRequirements.State} else { "Disabled"}}}}
+$x|group 'MFA Status'
+$x=Get-AzureADDevice|select objectid,displayname,accountenabled,deviceostype,deviceosversion,profiletype,approximatelastlogontimestamp
+$x|group profiletype,deviceostype
+Get-MsolCompanyInformation
+
+<# WAP #>
+gc C:\Windows\System32\drivers\etc\hosts > $env:USERPROFILE\Desktop\hosts.txt
+gci Cert:\LocalMachine\my|fl * > $env:USERPROFILE\Desktop\LocalMachineCerts.txt
+Invoke-BpaModel Microsoft/Windows/RemoteAccessServer
+Get-BpaResult Microsoft/Windows/RemoteAccessServer > $env:USERPROFILE\Desktop\Bpa-RemoteAccessServer.txt
+Get-WebApplicationProxyApplication > $env:USERPROFILE\Desktop\WapApp.txt
+Get-WebApplicationProxyConfiguration | fl * > $env:USERPROFILE\Desktop\WapConfig.txt
+Get-WebApplicationProxyHealth > $env:USERPROFILE\Desktop\WapHealth.txt
+Get-WebApplicationProxyAvailableADFSRelyingParty | fl * > $env:USERPROFILE\Desktop\WapAdfsParty.txt
+Get-WebApplicationProxySslCertificate | fl * > $env:USERPROFILE\Desktop\WapSslCerts.txt
+Get-ItemProperty HKLM:\SOFTWARE\Microsoft\AppProxy > $env:USERPROFILE\Desktop\WapReg.txt
+
+<# AAD Connect #>
+Import-Module 'C:\Program Files\Microsoft Azure Active Directory Connect\AzureADSSO.psd1'
+New-AzureADSSOAuthenticationContext
+$env:COMPUTERNAME;Get-AzureADSSOStatus
+Import-Module adsync
+$x=Get-ADSyncConnector|?{$_.Type -eq "AD"}
+$c=Get-ADSyncConnector|?{$_.Name -like "*AAD"}
+$c.Name;Get-ADSyncAADCompanyFeature -ConnectorName $c.Name
+Get-ADSyncAADPasswordResetConfiguration -Connector $C.Name
+Get-ADSyncGlobalSettings|select -ExpandProperty parameters|ft Name, Value
+Get-ADSyncScheduler
+Import-Module 'C:\Program Files\Microsoft Azure Active Directory Connect\AdSyncConfig\AdSyncConfig.psm1'
+Get-ADSyncADConnectorAccount
+Get-ADUser -Filter 'name -like "svc.ad.adconnect"'|Get-ADPrincipalGroupMembership|select Name
+Get-ADUser -Filter "Name -like 'svc.ad.*'" -Properties passwordLastSet|select name,password*
+
+<# ADFS #>
+Import-Module Adfs
+Get-AdfsGlobalAuthenticationPolicy
+$x=Get-AdfsProperties|fl *
+$x.WIASupportedUserAgents
+Get-AdfsDeviceRegistration
+gci Cert:\LocalMachine\My|fl *
+Get-AdfsSslCertificate
+Get-AdfsCertificate
+gci -Recurse HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\
+gci -Recurse HKLM:\SYSTEM\CurrentControlSet\Control\Cryptography\Configuration\Local\SSL|Get-ItemProperty|%{$_."(default)";$_.pschildname;"";$_.functions;""}
+gci -Recurse HKLM:\SOFTWARE\Microsoft\.NETFramework\v4.0.30319
+Get-AdfsRelyingPartyTrust
+Import-Module Msonline
+Connect-MsolService
+Get-MsolDomain|?{$_.authentication -eq "Federated"}|%{$_.name;Get-MsolFederationProperty -DomainName $_.name}
+Get-AdfsEndpoint|?{$_.enabled -eq "True"}|select Proxy,Protocol,AddressPath,ClientCredentialType| fl
+Get-AdfsAdditionalAuthenticationRule
+Get-AdfsAuthenticationProvider
+Get-AdfsClient
+Get-AdfsWebApplicationProxyRelyingPartyTrust
+Get-AdfsWebConfig
+Get-AdfsWebTheme
