@@ -31,7 +31,7 @@ Get-ScheduledTask|select TaskName,TaskPath,State,Actions,Author,Date,Description
 
 gwmi Win32_UserAccount -Filter "LocalAccount='True'"|select Name,Status,PasswordExpires,Disabled,Lockout,PasswordRequired,SID|Export-Csv $env:HOMEPATH\Desktop\$env:COMPUTERNAME-LocalUsers.csv
 gwmi Win32_Group -Filter "LocalAccount='True'"|select Name,Status,Caption,Description,SID|Export-Csv $env:HOMEPATH\Desktop\$env:COMPUTERNAME-LocalGroups.csv
-if($PSVersionTable.PSVersion.Major -gt 2)
+if($PSVersionTable.PSVersion.Major -gt 4)
 {
     Get-LocalGroup|%{Get-LocalGroupMember -Name $_|Select Name,SID,PrincipalSource|Export-Csv $env:HOMEPATH\Desktop\$env:COMPUTERNAME-Members-$_.csv}
 }
@@ -54,7 +54,7 @@ if((New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsId
 
     Get-Process|select Name,ProcessName,Id,Path,Company,Description,Product,StartTime|Export-Csv $env:HOMEPATH\Desktop\$env:COMPUTERNAME-Processes.csv
 
-    if($PSVersionTable.PSVersion.Major -gt 2)
+    if($PSVersionTable.PSVersion.Major -gt 4)
     {
         Get-GPResultantSetOfPolicy -ReportType Html -Path $env:HOMEPATH\Desktop\$env:COMPUTERNAME-Rsop.html;Get-GPResultantSetOfPolicy -ReportType Xml -Path $env:HOMEPATH\Desktop\$env:COMPUTERNAME-Rsop.xml
     }
@@ -75,7 +75,7 @@ else
 
         Get-Process|select Name,ProcessName,Id,Path,Company,Description,Product,StartTime|Export-Csv $env:HOMEPATH\Desktop\$env:COMPUTERNAME-Processes.csv
 
-        if($PSVersionTable.PSVersion.Major -gt 2)
+        if($PSVersionTable.PSVersion.Major -gt 4)
         {
             Get-GPResultantSetOfPolicy -ReportType Html -Path $env:HOMEPATH\Desktop\$env:COMPUTERNAME-Rsop.html;Get-GPResultantSetOfPolicy -ReportType Xml -Path $env:HOMEPATH\Desktop\$env:COMPUTERNAME-Rsop.xml
         }
