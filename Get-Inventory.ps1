@@ -45,6 +45,8 @@ else
 
 w32tm /query /status > $env:HOMEPATH\Desktop\$env:COMPUTERNAME-Time.txt
 
+Get-BpaModel | %{$_.id; Invoke-BpaModel -ModelId $_.id; Get-BpaResult -ModelId $_.id|Export-CSV $env:HOMEPATH\Desktop\$env:COMPUTERNAME-BPA-$($_.Id.Substring($_.Id.LastIndexOf('/')+1)).csv}
+
 # Requires Elevation:
 if((New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
 {
