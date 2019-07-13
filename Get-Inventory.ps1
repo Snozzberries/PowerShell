@@ -92,6 +92,11 @@ else
     Start-Process powershell -Verb runAs -ArgumentList "-Command",$script -wait
 }
 
+<# ADDS #>
+repadmin /showrepl * /csv > $env:HOMEPATH\Desktop\$env:COMPUTERNAME-Showrepl.txt
+gci 'HKLM:\SYSTEM\CurrentControlSet\Services\DFSR\Parameters\SysVols' > $env:HOMEPATH\Desktop\$env:COMPUTERNAME-DfsrLocalState.txt
+dfsrmig /getglobalstate > $env:HOMEPATH\Desktop\$env:COMPUTERNAME-dfsrmig.txt
+
 <# O365 #>
 Import-Module Az
 Import-Module MSOnline
