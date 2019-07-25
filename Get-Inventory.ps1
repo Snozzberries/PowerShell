@@ -119,6 +119,11 @@ $x|group 'MFA Status'
 $x=Get-AzureADDevice|select objectid,displayname,accountenabled,deviceostype,deviceosversion,profiletype,approximatelastlogontimestamp
 $x|group profiletype,deviceostype
 Get-MsolCompanyInformation
+Get-UnifiedGroup | Where {$_.AccessType -eq "Private"} | Set-UnifiedGroup -HiddenFromAddressListsEnabled:$true
+Get-SPOBrowserIdleSignOut
+Get-SPOTenant
+Get-SPOTenantSyncClientRestriction
+
 
 <# WAP #>
 gc C:\Windows\System32\drivers\etc\hosts > $env:USERPROFILE\Desktop\hosts.txt
