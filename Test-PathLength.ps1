@@ -7,7 +7,7 @@ When working with long file paths, often times utilities such as Robocopy are li
 Leveraging symbolic links we are able to shorten the file path with a new path reference with a shortned name.
 https://docs.microsoft.com/en-us/windows/win32/fileio/naming-a-file#maximum-path-length-limitation
 #>
-function Test-PathLentgh
+function Test-PathLength
 {
     Param(
         [System.IO.FileInfo]$path
