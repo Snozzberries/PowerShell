@@ -11,7 +11,7 @@ function Get-MultiValue
     foreach ($prop in $object.psobject.Properties)
     {
         if ($prop.Value -is [array])
-         {
+        {
             $counter = 0
             foreach ($value in $prop.Value)
             {
@@ -19,11 +19,11 @@ function Get-MultiValue
                 $returnObject | Add-Member -MemberType NoteProperty -Name "$($prop.Name)$counter" -Value $value
                 $counter++
             }
-         }
-         else
-         {
+        }
+        else
+        {
             $returnObject | Add-Member -MemberType NoteProperty -Name $prop.Name -Value $prop.Value
-         }
+        }
     }
     return $returnObject
 }
