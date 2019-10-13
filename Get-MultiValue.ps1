@@ -7,23 +7,34 @@ function Get-MultiValue
         $object
     )
 
-    $returnObject = New-Object -TypeName psobject
-    foreach ($prop in $object.psobject.Properties)
+    process
     {
-        if ($prop.Value -is [array])
+        if ($object.Count -gt 1)
         {
-            $counter = 0
-            foreach ($value in $prop.Value)
+            foreach ($o in $object)
             {
-                if ($value -is [array]) { Get-MultiValue -object $value}
-                $returnObject | Add-Member -MemberType NoteProperty -Name "$($prop.Name)$counter" -Value $value
-                $counter++
+                Get-MultiValue -object $o
             }
         }
-        else
+
+        $returnObject = New-Object -TypeName psobject
+        foreach ($prop in $object.psobject.Properties)
         {
-            $returnObject | Add-Member -MemberType NoteProperty -Name $prop.Name -Value $prop.Value
+            if ($prop.Value -is [array])
+            {
+                $counter = 0
+                foreach ($value in $prop.Value)
+                {
+                    if ($value -is [array]) { Get-MultiValue -object $value }
+                    $returnObject | Add-Member -MemberType NoteProperty -Name "$($prop.Name)$counter" -Value $value
+                    $counter++
+                }
+            }
+            else
+            {
+                $returnObject | Add-Member -MemberType NoteProperty -Name $prop.Name -Value $prop.Value
+            }
         }
+        return $returnObject
     }
-    return $returnObject
 }
