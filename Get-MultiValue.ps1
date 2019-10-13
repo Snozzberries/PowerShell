@@ -9,14 +9,6 @@ function Get-MultiValue
 
     process
     {
-        if ($object.Count -gt 1)
-        {
-            foreach ($o in $object)
-            {
-                Get-MultiValue -object $o
-            }
-        }
-
         $returnObject = New-Object -TypeName psobject
         foreach ($prop in $object.psobject.Properties)
         {
