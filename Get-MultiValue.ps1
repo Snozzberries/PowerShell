@@ -1,32 +1,35 @@
-function Get-MultiValue
+function New-FlatObject
 {
     Param 
     (
-        [Parameter(Mandatory = $true,
-            ValueFromPipeline = $true)]
+        [Parameter(Mandatory,
+            ValueFromPipeline)]
         $object
     )
 
     process
     {
-        $returnObject = New-Object -TypeName psobject
+        $returnObject = New-Object -TypeName psobject # TODO Convert to hash table (A)
         foreach ($prop in $object.psobject.Properties)
         {
-            if ($prop.Value -is [array])
+            if ($prop.Value -is [array]) # TODO Check for `-is [psobject]` as well
             {
                 $counter = 0
                 foreach ($value in $prop.Value)
                 {
                     if ($value -is [array]) { Get-MultiValue -object $value }
-                    $returnObject | Add-Member -MemberType NoteProperty -Name "$($prop.Name)$counter" -Value $value
+                    $returnObject | Add-Member -MemberType NoteProperty -Name "$($prop.Name)$counter" -Value $value # TODO (A)
                     $counter++
                 }
             }
             else
             {
-                $returnObject | Add-Member -MemberType NoteProperty -Name $prop.Name -Value $prop.Value
+                $returnObject | Add-Member -MemberType NoteProperty -Name $prop.Name -Value $prop.Value # TODO (A)
             }
         }
-        return $returnObject
+        return $returnObject # TODO (A)
     }
 }
+
+# TODO (A) $returnHT["$($prop.Name)$counter"] = $value
+# TODO (A) return [PSCustomObject]$returnHT
