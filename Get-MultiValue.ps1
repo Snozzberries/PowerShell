@@ -17,7 +17,7 @@ function New-FlatObject
                 $counter = 0
                 foreach ($value in $prop.Value)
                 {
-                    if ($value -is [array]) { Get-MultiValue -object $value }
+                    if ($value -is [array]) { New-FlatObject -object $value }
                     $returnObject | Add-Member -MemberType NoteProperty -Name "$($prop.Name)$counter" -Value $value # TODO (A)
                     $counter++
                 }
