@@ -9,27 +9,24 @@ function New-FlatObject
 
     process
     {
-        $returnObject = New-Object -TypeName psobject # TODO Convert to hash table (A)
+        $returnHashTable = [ordered]@{}
         foreach ($prop in $object.psobject.Properties)
         {
-            if ($prop.Value -is [array]) # TODO Check for `-is [psobject]` as well
+            if ($prop.Value -is [array] -or $prop.Value -is [psobject])
             {
                 $counter = 0
                 foreach ($value in $prop.Value)
                 {
                     if ($value -is [array]) { New-FlatObject -object $value }
-                    $returnObject | Add-Member -MemberType NoteProperty -Name "$($prop.Name)$counter" -Value $value # TODO (A)
+                    $returnHashTable["$($prop.Name)$counter"] = $value
                     $counter++
                 }
             }
             else
             {
-                $returnObject | Add-Member -MemberType NoteProperty -Name $prop.Name -Value $prop.Value # TODO (A)
+                $returnHashTable[$prop.Name] = $prop.Value
             }
         }
-        return $returnObject # TODO (A)
+        return [PSCustomObject]$returnHashTable
     }
 }
-
-# TODO (A) $returnHT["$($prop.Name)$counter"] = $value
-# TODO (A) return [PSCustomObject]$returnHT
