@@ -9,7 +9,7 @@ function New-FlatObject
 
     process
     {
-        $returnHashTable = [ordered]@{}
+        $returnHashTable = @{}
         foreach ($prop in $object.psobject.Properties)
         {
             if ($prop.Value -is [array] -or $prop.Value -is [psobject])
@@ -27,6 +27,6 @@ function New-FlatObject
                 $returnHashTable[$prop.Name] = $prop.Value
             }
         }
-        return [PSCustomObject]$returnHashTable
+        return [PSCustomObject]$returnHashTable|sort @{Expression={(($_.psobject.properties)|measure).count}} -Descending
     }
 }
