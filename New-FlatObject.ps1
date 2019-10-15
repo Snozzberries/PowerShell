@@ -12,12 +12,12 @@ function New-FlatObject
         $returnHashTable = [ordered]@{}
         foreach ($prop in $object.psobject.Properties)
         {
-            if ($prop.Value -is [array] -or $prop.Value -is [psobject])
+            if ($prop.Value -is [array])
             {
                 $counter = 0
                 foreach ($value in $prop.Value)
                 {
-                    if ($value -is [array] -or $value -is [psobject]) { New-FlatObject -object $value }
+                    if ($value -is [array]) { New-FlatObject -object $value }
                     $returnHashTable["$($prop.Name)$counter"] = $value
                     $counter++
                 }
