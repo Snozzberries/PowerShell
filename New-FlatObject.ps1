@@ -12,7 +12,7 @@ function New-FlatObject
         $returnHashTable = [ordered]@{}
         foreach ($prop in $object.psobject.Properties)
         {
-            if ($prop.Value -is [array])
+            if ($prop.Value -is [array]) # (($prop.Value -ne $null) -and (-not $prop.Value.GetType().isValueType))
             {
                 $counter = 0
                 foreach ($value in $prop.Value)
