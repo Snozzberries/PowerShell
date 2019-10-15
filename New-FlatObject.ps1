@@ -23,10 +23,10 @@ function New-FlatObject
                     { 
                         foreach ($recurse in (New-FlatObject -object $value).psobject.Properties)
                         {
-                            $returnHashTable[$recurse.Name] = $recurse.Value
+                            $returnHashTable["$($prop.Name)-$($recurse.Name)"] = $recurse.Value
                         }
                     }
-                    $returnHashTable["$($prop.Name)$counter"] = $value
+                    $returnHashTable["$($prop.Name)-$counter"] = $value
                     $counter++
                 }
             }
