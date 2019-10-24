@@ -19,6 +19,7 @@ wevtutil.exe epl Application $env:HOMEDRIVE$env:HOMEPATH\Desktop\$env:COMPUTERNA
 wevtutil.exe epl System $env:HOMEDRIVE$env:HOMEPATH\Desktop\$env:COMPUTERNAME-SystemLog.evtx /q:"*[System[(Level=1 or Level=2 or Level=3)]]"
 
 Get-NetFirewallProfile | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\$env:COMPUTERNAME-NetFirewallProfile.csv
+Get-NetConnectionProfile | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\$env:COMPUTERNAME-NetConnectionProfile.csv
 gwmi Win32_Service | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\$env:COMPUTERNAME-Services.csv
 
 get-smbshare | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\$env:COMPUTERNAME-Shares.csv
