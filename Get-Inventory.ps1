@@ -162,28 +162,49 @@ $AadDomains | %{ Get-AzureADDomainNameReference -Name $_.Name | New-FlatObject |
 $AadDomains | %{ Get-AzureADDomainServiceConfigurationRecord -Name $_.Name | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\O365-AAD-DomainServiceConfig-$($_.Name).csv}
 $AadDomains | %{ Get-AzureADDomainVerificationDnsRecord -Name $_.Name | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\O365-AAD-DomainVerification-$($_.Name).csv}
 
-<# SPO//EXO//S4B #>
-#Prep
+<# SPO #>
 $orgName="<name of your Office 365 organization, example: contosotoycompany>"
-$creds = Get-Credential
 Install-Module -Name Microsoft.Online.SharePoint.PowerShell
 Import-Module Microsoft.Online.SharePoint.PowerShell
 Connect-SPOService -Url https://$orgName-admin.sharepoint.com
-$SccSession = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.compliance.protection.outlook.com/powershell-liveid/ -Credential $creds -Authentication "Basic" -AllowRedirection
-Import-PSSession $SccSession -Prefix cc
-
-Get-UnifiedGroup | Where { $_.AccessType -eq "Private" } | Set-UnifiedGroup -HiddenFromAddressListsEnabled:$true
-Get-SPOBrowserIdleSignOut
-Get-SPOTenant
-Get-SPOTenantSyncClientRestriction
-
-Remove-PSSession $SccSession
+Get-SPOAppInfo -Name " " | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SPO-AppInfo.csv
+Get-SPOBrowserIdleSignOut | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SPO-BrowserIdle.csv
+Get-SPOBuiltInDesignPackageVisibility | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SPO-DesignPackVis.csv
+Get-SPOSite | %{ Get-SPODataEncryptionPolicy -Identity $_.Url } | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SPO-DataEncrypt.csv
+Get-SPODeletedSite | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SPO-DeletedSites.csv
+Get-SPOExternalUser | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SPO-ExternalUser.csv
+Get-SPOGeoStorageQuota | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SPO-GeoStorageQuota.csv
+Get-SPOHideDefaultThemes | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SPO-HideDefaultThemes.csv
+Get-SPOHomeSite | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SPO-HomeSite.csv
+Get-SPOHubSite | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SPO-HubSite.csv
+Get-SPOKnowledgeHubSite | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SPO-KnowledgeHubSite.csv
+Get-SPOMigrationJobStatus | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SPO-MigJobStatus.csv
+Get-SPOMultiGeoCompanyAllowedDataLocation | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SPO-MGeoCompany.csv
+Get-SPOOrgAssetsLibrary | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SPO-OrgAssesstsLib.csv
+Get-SPOOrgNewsSite | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SPO-OrgNewsSite.csv
+Get-SPOSite | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SPO-Sites.csv
+Get-SPOSite | %{ Get-SPOSiteCollectionAppCatalogs -Site $_.Url } | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SPO-SiteCollectionAppCat.csv
+Get-SPOSite | %{ Get-SPOSiteDataEncryptionPolicy -Identity $_.Url } | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SPO-SiteDataEncryptPolicy.csv
+Get-SPOSiteDesign | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SPO-SiteDesign.csv
+Get-SPOSiteDesign | %{ Get-SPOSiteDesignRights $_ } | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SPO-SiteDesignRights.csv
+Get-SPOSiteDesignTask | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SPO-SiteDesignTask.csv
+Get-SPOSite | %{ Get-SPOSiteGroup $_ | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SPO-SiteGroup-$($_.Title).csv }
+Get-SPOTenant | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SPO-Tenant.csv
+Get-SPOTenantLogEntry | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SPO-TenantLogEntry.csv
+Get-SPOTenantLogLastAvailableTimeInUtc | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SPO-LastLog.csv
+Get-SPOTenantServicePrincipalPermissionGrants | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SPO-PermGrant.csv
+Get-SPOTenantServicePrincipalPermissionRequests | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SPO-PermReq.csv
+Get-SPOTenantSyncClientRestriction | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SPO-SyncClientRestriction.csv
+Get-SPOTheme | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SPO-Theme.csv
+Get-SPOSite | %{ Get-SPOUser $_ | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SPO-User-$($_.Title).csv }
+Get-SPOWebTemplate | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SPO-WebTemplate.csv
 Disconnect-SPOService
 
 <# EXO #>
 $creds = Get-Credential
 $session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/ -Credential $creds -Authentication Basic -AllowRedirection
 Import-PSSession $session -DisableNameChecking
+$Mailboxes = Get-Mailbox -ResultSize Unlimited
 Get-AcceptedDomain | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-AcceptedDomains.csv
 Get-AccessToCustomerDataRequest | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-AccessToCustomer.csv
 Get-ActiveSyncDeviceAccessRule | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-ActiveSyncDeviceAccessRule.csv
@@ -215,7 +236,7 @@ Get-CASMailbox | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop
 Get-CASMailboxPlan | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-CASMBPlan.csv
 Get-ClassificationRuleCollection | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-ClassRuleCollection.csv
 Get-ClientAccessRule | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-ClientAccessRule.csv
-Get-Mailbox | %{ Get-Clutter -Identity $_.Name } | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-Clutter.csv
+$Mailboxes | %{ Get-Clutter -Identity $_.Name } | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-Clutter.csv
 Get-CompliancePolicyFileSyncNotification | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-CompliancePolicyFileSyncNotification.csv
 Get-CompliancePolicySyncNotification | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-CompliancePolicySyncNotification.csv
 Get-ComplianceTag | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-ComplianceTag.csv
@@ -256,7 +277,7 @@ Get-FederatedOrganizationIdentifier | New-FlatObject | Export-Csv $env:HOMEDRIVE
 Get-AcceptedDomain | %{ Get-FederationInformation $_.DomainName } | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-FedInfo.csv
 Get-FederationTrust | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-FedTrust.csv
 Get-FfoMigrationReport | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-FfoMigReport.csv
-Get-Mailbox | %{ Get-FocusedInbox -Identity $_.Name } | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-FocusedInbox.csv
+$Mailboxes | %{ Get-FocusedInbox -Identity $_.Name } | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-FocusedInbox.csv
 Get-Group | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-Group.csv
 Get-GroupMailbox | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-GroupMB.csv
 Get-HistoricalSearch | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-HistSearch.csv
@@ -268,20 +289,20 @@ Get-HostedOutboundSpamFilterRule | New-FlatObject | Export-Csv $env:HOMEDRIVE$en
 Get-HybridMailflow | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-HybridMail.csv
 Get-HybridMailflowDatacenterIPs | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-HybridMailDatacenter.csv
 Get-InboundConnector | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-InboundConnector
-Get-Mailbox | %{ Get-InboxRule -Mailbox $_.Name } | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-InboxRules.csv
+$Mailboxes | %{ Get-InboxRule -Mailbox $_.Name } | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-InboxRules.csv
 Get-IntraOrganizationConfiguration | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-IntraOrgConfig.csv
 Get-IntraOrganizationConnector | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-IntraOrgConn.csv
 Get-IRMConfiguration | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-IrmConfig.csv
 Get-JournalRule | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-JournalRule.csv
 Get-LinkedUser | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-LinkedUser.csv
-Get-Mailbox | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-Mailbox.csv
+$Mailboxes | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-Mailbox.csv
 Get-MailboxAuditBypassAssociation | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-MBAuditBypass.csv
-Get-Mailbox | %{ Get-MailboxMessageConfiguration -Identity $_.Name } | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-MBMessageConfig.csv
-Get-Mailbox | %{ Get-MailboxOverrideConfiguration -Identity $_.Name } | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-MBOverrideConfig.csv
-Get-Mailbox | %{ Get-MailboxPermission -Identity $_.Name } | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-MBPermissions.csv
+$Mailboxes | %{ Get-MailboxMessageConfiguration -Identity $_.Name } | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-MBMessageConfig.csv
+$Mailboxes | %{ Get-MailboxOverrideConfiguration -Identity $_.Name } | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-MBOverrideConfig.csv
+$Mailboxes | %{ Get-MailboxPermission -Identity $_.Name } | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-MBPermissions.csv
 Get-MailboxPlan | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-MBPlan.csv
 Get-MailboxSearch | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-MBSearch.csv
-Get-Mailbox | %{ Get-MailboxStatistics -Identity $_.Name } | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-MBStats.csv
+$Mailboxes | %{ Get-MailboxStatistics -Identity $_.Name } | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-MBStats.csv
 Get-MailContact | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-MailContact.csv
 Get-MailDetailATPReport -StartDate (Get-Date).AddDays(-90) -EndDate (Get-Date) | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-MailDetailATPReport.csv
 Get-MailDetailDlpPolicyReport -StartDate (Get-Date).AddDays(-90) -EndDate (Get-Date) | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-MailDetailDlpPolicyReport.csv
@@ -363,7 +384,7 @@ Get-SmimeConfig | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Deskto
 Get-SpoofMailReport -StartDate (Get-Date).AddDays(-90) -EndDate (Get-Date) | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-SpoofMailReport.csv
 Get-SupervisoryReviewPolicyV2 -StartDate (Get-Date).AddDays(-90) -EndDate (Get-Date) | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-SupervisoryReviewPolicyv2.csv
 Get-SupervisoryReviewRule | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-SuperReviewRule.csv
-Get-Mailbox | %{ Get-SweepRule -Mailbox $_.Name } | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-SweepRule.csv
+$Mailboxes | %{ Get-SweepRule -Mailbox $_.Name } | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-SweepRule.csv
 Get-SyncConfig | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-SyncConfig.csv
 Get-SyncRequest | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-SyncRequest.csv
 Get-TransportConfig | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-TransportConfig.csv
