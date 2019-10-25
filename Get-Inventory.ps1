@@ -375,6 +375,50 @@ Get-User | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-U
 Test-IRMConfiguration | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\EXO-TestIrmConfig.csv
 Remove-PSSession $session
 
+<# Sec & Comp Center #>
+$creds = Get-Credential
+$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.compliance.protection.outlook.com/powershell-liveid/ -Credential $creds -Authentication Basic -AllowRedirection
+Import-PSSession $Session -DisableNameChecking
+Get-ActivityAlert | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SCC-ActivityAlert.csv
+Get-ComplianceCase | %{ Get-CaseHoldPolicy } | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SCC-CaseHoldPolicy.csv
+Get-CaseHoldRule | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SCC-CaseHoldRule.csv
+Get-ComplianceCase | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SCC-CompCase.csv
+Get-ComplianceCase | %{ Get-ComplianceCaseMember } | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SCC-CompCaseMember.csv
+Get-ComplianceCaseStatistics | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SCC-CompCaseStats.csv
+Get-ComplianceRetentionEvent | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SCC-CompRetentionEvent.csv
+Get-ComplianceRetentionEventType | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SCC-CompRetentionEventType.csv
+Get-ComplianceSearch | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SCC-CompSearch.csv
+Get-ComplianceSearchAction | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SCC-CompSearchAction.csv
+Get-ComplianceSecurityFilter | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SCC-CompSecurityFeature.csv
+Get-DlpCompliancePolicy | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SCC-DlpCompPolicy.csv
+Get-DlpComplianceRule | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SCC-DlpCompRule.csv
+Get-DlpEdmSchema | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SCC-DlpEdmSchema.csv
+Get-DlpSensitiveInformationType | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SCC-DlpSensitiveInfoType.csv
+Get-eDiscoveryCaseAdmin | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SCC-eDiscCaseAdmin.csv
+Get-FilePlanPropertyAuthority | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SCC-FilePlanAuth.csv
+Get-FilePlanPropertyCategory | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SCC-FilePlanCat.csv
+Get-FilePlanPropertyCitation | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SCC-FilePlanCit.csv
+Get-FilePlanPropertyDepartment | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SCC-FilePlanDept.csv
+Get-FilePlanPropertyReferenceId | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SCC-FilePlanRef.csv
+Get-FilePlanPropertyStructure | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SCC-FilePlanStruct.csv
+Get-FilePlanPropertySubCategory | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SCC-FilePlanSubCat.csv
+Get-HoldCompliancePolicy | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SCC-HoldCompPolicy.csv
+Get-HoldComplianceRule | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SCC-HoldCompRule.csv
+Get-InformationBarrierPoliciesApplicationStatus | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SCC-InfoBarrierPolicyAppStatus.csv
+Get-InformationBarrierPolicy | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SCC-InfoBarrierPolicy.csv
+Get-Label | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SCC-Label.csv
+Get-LabelPolicy | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SCC-LabelPolicy.csv
+Get-LabelPolicyRule | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SCC-LabelPolicyRule.csv
+Get-OrganizationSegment | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SCC-OrgSegment.csv
+Get-ProtectionAlert | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SCC-ProtAlert.csv
+Get-RetentionCompliancePolicy | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SCC-RetenCompPolicy.csv
+Get-RetentionComplianceRule | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SCC-RetenCompRule.csv
+Get-SupervisoryReviewOverallProgressReport | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SCC-SuperReviewOverProgressReport.csv
+Get-SupervisoryReviewTopCasesReport | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SCC-SuperReviewTopCaseReport.csv
+Get-TeamsRetentionCompliancePolicy | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SCC-TeamsRetenCompPolicy.csv
+Get-TeamsRetentionComplianceRule | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\SCC-TeamsRetenCompRule.csv
+Remove-PSSession $Session
+
 <# AAD Connect #>
 Import-Module 'C:\Program Files\Microsoft Azure Active Directory Connect\AzureADSSO.psd1'
 Import-Module 'C:\Program Files\Microsoft Azure Active Directory Connect\AdSyncConfig\AdSyncConfig.psm1'
