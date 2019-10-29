@@ -12,13 +12,13 @@ function New-FlatObject
         $returnHashTable = [ordered]@{ }
         foreach ($prop in $object.psobject.Properties)
         {
-            if ($prop.Value -is [array] -or $prop.Value.GetType().Name -Like "List*")
+            if ($prop.Value -is [array])
             #if (($prop.Value -ne $null) -and (-not $prop.Value.GetType().isValueType))
             {
                 $counter = 0
                 foreach ($value in $prop.Value)
                 {
-                    if ($value -is [array] -or $prop.Value.GetType().Name -Like "List*")
+                    if ($value -is [array])
                     #if (($prop.Value -ne $null) -and (-not $prop.Value.GetType().isValueType))
                     { 
                         foreach ($recurse in (New-FlatObject -object $value).psobject.Properties)
