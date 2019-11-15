@@ -443,11 +443,13 @@ Remove-PSSession $Session
 <# AAD Connect #>
 Import-Module 'C:\Program Files\Microsoft Azure Active Directory Connect\AzureADSSO.psd1'
 Import-Module 'C:\Program Files\Microsoft Azure Active Directory Connect\AdSyncConfig\AdSyncConfig.psm1'
+#ADSyncTools.psm1
+#ADConnectivityTools.psm1
 Import-Module ADSync
 New-AzureADSSOAuthenticationContext
 Get-AzureADSSOStatus | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\$env:COMPUTERNAME-SSO-Status.csv
 Get-AzureADSSOComputerAcccountInformation | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\$env:COMPUTERNAME-SSO-ComputerAccount.csv
-Get-ADSyncServerConfiguration -Path $env:HOMEDRIVE$env:HOMEPATH\Desktop\$env:COMPUTERNAME-AADC-ServerConfig\
+Get-ADSyncServerConfiguration -Path $env:HOMEDRIVE$env:HOMEPATH\Desktop\$env:COMPUTERNAME-AADC-ServerConfig.csv
 Get-ADSyncAADCompanyFeature | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\$env:COMPUTERNAME-AADC-Feature.csv
 Get-ADSyncAutoUpgrade | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\$env:COMPUTERNAME-AADC-AutoUpgrade.csv
 Get-ADSyncConnector | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\$env:COMPUTERNAME-AADC-Connector.csv
