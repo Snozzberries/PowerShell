@@ -1,5 +1,5 @@
 # ADRecon.ps1
-# https://raw.githubusercontent.com/sense-of-security/ADRecon/master/ADRecon.ps1
+(New-Object System.Net.WebClient).DownloadString("https://raw.githubusercontent.com/sense-of-security/ADRecon/master/ADRecon.ps1")
 # AAD Connect MA Documenter
 # https://github.com/Microsoft/AADConnectConfigDocumenter
 
