@@ -54,6 +54,12 @@ Get-GPResultantSetOfPolicy -ReportType Html -Path $env:HOMEDRIVE$env:HOMEPATH\De
 #gpresult.exe /h $env:HOMEDRIVE$env:HOMEPATH\Desktop\$env:COMPUTERNAME-Rsop.html;gpresult.exe /x $env:HOMEDRIVE$env:HOMEPATH\Desktop\$env:COMPUTERNAME-Rsop.xml
 
 <# O365 #>
+# TODOs
+##https://github.com/bayko/365-Secure-Score-Powershell/blob/master/SecureScore.ps1
+##https://blog.ciaops.com/2019/10/04/capturing-all-microsoft-secure-score-items/
+##https://gallery.technet.microsoft.com/Office-365-Secure-Score-8a81f6af
+##https://justaucguy.wordpress.com/2018/01/10/office-365-secure-score-practical-in-depth-analysis/
+##https://gist.github.com/psignoret/41793f8c6211d2df5051d77ca3728c09
 #Prep
 $creds = Get-Credential
 Install-Module MSOnline
