@@ -68,8 +68,9 @@ Install-Module AzureAD
 Import-Module MSOnline
 Import-Module Az
 Import-Module AzureAD
-Connect-MSOnline -Credential $creds
-Connect-AzAccount -Credential $creds
+#Connect-MSOnline -Credential $creds
+Connect-MsolService -Credential $creds
+Connect-AzAccount #-Credential $creds
 Connect-AzureAD -Credential $creds
 Get-MsolAccountSku | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\O365-MSOL-AccountSku.csv
 Get-MsolCompanyInformation | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\O365-MSOL-CompanyInfo.csv
