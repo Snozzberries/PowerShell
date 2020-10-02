@@ -116,6 +116,7 @@ Get-AzureADDeviceConfiguration | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:
 $AadRoles = Get-AzureADDirectoryRole
 $AadRoles | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\O365-AAD-Roles.csv
 $AadRoles | %{ Get-AzureADDirectoryRoleMember -ObjectId $_.ObjectId | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\O365-AAD-RoleMembers-$($_.ObjectId.Substring($_.ObjectId.Length-12)).csv }
+Get-AzureADDirectoryRole|%{$_.DisplayName;"";Get-AzureADDirectoryRoleMember -ObjectId $_.ObjectID} > $env:HOMEDRIVE$env:HOMEPATH\Desktop\O365-AAD-RoleMembers.txt
 Get-AzureADDirectoryRoleTemplate | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\O365-AAD-RoleTemplate.csv
 $AadDomains = Get-AzureADDomain
 $AadDomains | New-FlatObject | Export-Csv $env:HOMEDRIVE$env:HOMEPATH\Desktop\O365-AAD-Domains.csv
